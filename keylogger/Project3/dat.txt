@@ -1,1 +1,5 @@
+<<<<<<< HEAD:keylogger/Project3/dat.txt
 #CONTROL 
+=======
+                      
+>>>>>>> 1a5a4e90048feee044f8daca7af2e357f0df59c9:Project3/dat.txt
