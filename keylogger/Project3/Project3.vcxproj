@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="database.cpp" />
     <ClCompile Include="database.h" />
+    <ClCompile Include="keylogger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="sqlite3.c" />
   </ItemGroup>
