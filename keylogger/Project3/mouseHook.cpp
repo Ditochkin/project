@@ -23,7 +23,7 @@ LRESULT CALLBACK  MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 
             std::cout << "Mouse Clicked at: X = " << x << ", Y = " << y << std::endl;
             const uint64_t time = timeSinceEpochMillisec2();
-            g_db.insertKey("mouse", time, wParam);
+            g_db.insertMouseKey("mouse", time, wParam);
         }
     }
 

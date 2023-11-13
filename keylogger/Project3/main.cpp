@@ -14,13 +14,14 @@ int main(int argc, char** argv)
 	std::ifstream config("../../config.txt");
 	config >> time;
 	
-	db.createDatabase("keylogger.sqlite3");	
-	std::string cols[2] = { "time, key" };
+	db.createDatabase("data.sqlite3");	
 
-	db.createTable("keyboard", 2, cols);
+	std::string keyboardCols[3] = { "time", "key", "pressing" };
+	db.createTable("keyboard", 3, keyboardCols);
 	db.clear("keyboard");
 
-	db.createTable("mouse", 2, cols);
+	std::string mouseCols[2] = { "time, key" };
+	db.createTable("mouse", 2, mouseCols);
 	db.clear("mouse");
 
 	MouseHook mouseHook;

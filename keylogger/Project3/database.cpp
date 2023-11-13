@@ -45,12 +45,37 @@ bool Database::createTable(std::string tableName, int numCols, std::string cols[
 	return true;
 }
 
-bool Database::insertKey(std::string tableName, time_t time, short key)
+bool Database::insertMouseKey(std::string tableName, time_t time, short key)
 {
 	std::string SQL = "INSERT INTO " + tableName + " VALUES(";
 	SQL.append(std::to_string(time));
 	SQL.append(",");
 	SQL.append(std::to_string(key));
+	SQL.append(");");
+
+	char* err = 0;
+
+	std::cout << SQL << std::endl;
+
+	if (sqlite3_exec(m_db, SQL.c_str(), 0, 0, &err))
+	{
+		fprintf(stderr, "Îøèáêà SQL: %sn", err);
+		sqlite3_free(err);
+		sqlite3_close(m_db);
+		return false;
+	}
+
+	return true;
+}
+
+bool Database::insertKeyboardKey(std::string tableName, time_t time, short key, bool pressed)
+{
+	std::string SQL = "INSERT INTO " + tableName + " VALUES(";
+	SQL.append(std::to_string(time));
+	SQL.append(",");
+	SQL.append(std::to_string(key));
+	SQL.append(",");
+	SQL.append(std::to_string(pressed));
 	SQL.append(");");
 
 	char* err = 0;
