@@ -6,7 +6,7 @@
 
 int main(int argc, char** argv) {
 	
-	Database db("keyboard.sqlite3");
+	Database db("keyboardTigran.sqlite3");
 	std::string cols[2] = { "time, key" };
 	db.createTable("keyboard", 2, cols);
 
@@ -25,6 +25,7 @@ int main(int argc, char** argv) {
                     db.insertKey("keyboard", time, KEY);
                 }
             }
+
         }
     }
 
