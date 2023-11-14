@@ -6,10 +6,10 @@ const std::string g_photoPath = "../../photos/";
 class Webcam
 {
 private:
-	std::thread webcamThread;
+	std::thread m_webcamThread;
 
 public:
-	Webcam() : webcamThread(std::move(std::thread(&Webcam::captureFrames, this)))
+	Webcam() : m_webcamThread(std::thread(&Webcam::captureFrames, this))
 	{
 	}
 
@@ -17,9 +17,9 @@ public:
 
 	~Webcam()
 	{
-		if (webcamThread.joinable())
+		if (m_webcamThread.joinable())
 		{
-			webcamThread.join();
+			m_webcamThread.join();
 		}
 	}
 };
